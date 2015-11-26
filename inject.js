@@ -12,10 +12,6 @@ window.playAudioNew = function () {
 };
 
 window.addEventListener('message', function (event) {
-	if (!initialized) {
-		return;
-	}
-
 	if (event.source !== window) {
 		return;
 	}
@@ -24,6 +20,16 @@ window.addEventListener('message', function (event) {
 		return;
 	}
 
+	if (event && event.data && event.data.cleared) {
+		console.log('cleared storage');
+		initialized = true;
+		return;
+	}
+
+	if (!initialized) {
+		return;
+	}
+	
 	var msg = event.data;
 
 	if (!msg.add) {
@@ -77,7 +83,8 @@ function init() {
 			audioPlayer.oldOperate.apply(audioPlayer, arguments);
 			window.postMessage({'play_id': id}, 'https://vk.com');
 		};
-		initialized = true;
+
+		window.postMessage({'clear': true}, 'https://vk.com/');
 	}
 }
 

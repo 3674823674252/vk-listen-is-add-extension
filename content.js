@@ -17,6 +17,12 @@ window.addEventListener('message', function (event) {
 
 	var msg = event.data;
 
+	if (msg.clear) {
+		return chrome.storage.local.clear(function () {
+			window.postMessage({'cleared' : true}, 'https://vk.com/');
+		});
+	}
+
 	if (!msg.play_id) {
 		return;
 	}
@@ -40,7 +46,7 @@ window.addEventListener('message', function (event) {
 		}
 
 		console.log(val);
-		if (ts - val.ts > 10000) {
+		if (ts - val.ts > 50000) {
 			window.postMessage({add: val}, 'https://vk.com');
 		} else {
 			console.log('too fast bro');
